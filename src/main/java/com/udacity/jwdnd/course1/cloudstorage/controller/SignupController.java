@@ -28,14 +28,15 @@ public class SignupController {
         Integer rawAffected = userService.createUser(user);
         if (rawAffected==1) {
             model.addAttribute("signUpSuccess", true);
+            return "login";
         }else{
             model.addAttribute("signUpError", true);
             if(rawAffected==-1){
                 String errorMessage = "Username already taken, chose another username";
                 model.addAttribute("errorMessage", errorMessage);
             }
+            return "signup";
         }
-        return "signup";
     }
 
 }

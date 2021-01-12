@@ -208,8 +208,6 @@ class CloudStorageApplicationTests {
         signupPage.submitUser(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
 
         Thread.sleep(500);
-        signupPage.goToLogin();
-        Thread.sleep(500);
 
         //Login with submitted user
         loginPage.signIn(USERNAME, PASSWORD);

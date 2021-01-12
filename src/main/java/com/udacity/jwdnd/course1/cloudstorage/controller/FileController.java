@@ -29,17 +29,22 @@ public class FileController {
 
     @PostMapping("/add")
     public String createFile(@RequestParam("file") MultipartFile file, File fileUpload, Authentication authentication, Model model) {
-        try {
-            fileUpload.setData(file.getInputStream().readAllBytes());
-            fileUpload.setContentType(file.getContentType());
-            fileUpload.setName(file.getOriginalFilename());
-            fileUpload.setSize(String.valueOf(file.getSize()));
-            Integer userId = userService.getUser(authentication.getName()).getUserId();
-            fileUpload.setUserid(userId);
-        } catch (IOException e) {
-            model.addAttribute("success", false);
-            e.printStackTrace();
+        Integer userId = userService.getUser(authentication.getName()).getUserId();
+        if (fileService.isFilenameAlreadyTaken(file.getOriginalFilename(), userId)) {
+            model.addAttribute("filenameError", true);
             return "result";
+        } else {
+            try {
+                fileUpload.setData(file.getInputStream().readAllBytes());
+                fileUpload.setContentType(file.getContentType());
+                fileUpload.setName(file.getOriginalFilename());
+                fileUpload.setSize(String.valueOf(file.getSize()));
+                fileUpload.setUserid(userId);
+            } catch (IOException e) {
+                model.addAttribute("success", false);
+                e.printStackTrace();
+                return "result";
+            }
         }
 
         Integer rawAffected = fileService.createFile(fileUpload);

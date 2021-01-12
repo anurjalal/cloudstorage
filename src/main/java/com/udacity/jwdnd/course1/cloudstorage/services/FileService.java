@@ -19,6 +19,11 @@ public class FileService {
         return fileMapper.addFile(file);
     }
 
+    public boolean isFilenameAlreadyTaken(String filename, Integer userId){
+        return fileMapper.selectFilenameByUserId(filename, userId) != null;
+
+    }
+
     public List<File> getAllFiles(Integer userId) {
         return fileMapper.getAllFilesByUserId(userId);
     }
