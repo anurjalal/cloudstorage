@@ -63,19 +63,19 @@ class CloudStorageApplicationTests {
     }
 
     @Test
-    public void authorizationTest() throws InterruptedException {
-        // verity client can always access signup and login
-        driver.get(BASE_URL + "/signup");
-        assertEquals(BASE_URL + "/signup", driver.getCurrentUrl());
-
-        driver.get(BASE_URL + "/login");
-        assertEquals(BASE_URL + "/login", driver.getCurrentUrl());
-
-        // verify that unauthorize user can't access home page and other url that required login
+    public void verify_home_page_not_accessible_without_login() throws InterruptedException {
+        // verify that unauthorize user can't access home page
         driver.get(BASE_URL + "/home");
         assertEquals(BASE_URL + "/login", driver.getCurrentUrl());
 
+        // verify that unauthorize user can't access note page
         driver.get(BASE_URL + "/note");
+        assertEquals(BASE_URL + "/login", driver.getCurrentUrl());
+
+        // verity client can always access signup and login
+        driver.get(BASE_URL + "/signup");
+        assertEquals(BASE_URL + "/signup", driver.getCurrentUrl());
+        driver.get(BASE_URL + "/login");
         assertEquals(BASE_URL + "/login", driver.getCurrentUrl());
     }
 
@@ -84,7 +84,11 @@ class CloudStorageApplicationTests {
         // Signup and Login
         initialize();
 
-        // Then, Logout
+        // verify that unauthorize user can access home page
+        driver.get(BASE_URL + "/home");
+        assertEquals(BASE_URL + "/home", driver.getCurrentUrl());
+
+        // Logout
         homePage.logout();
         Thread.sleep(500);
 
@@ -96,7 +100,7 @@ class CloudStorageApplicationTests {
     }
 
     @Test
-    public void NoteTest() throws InterruptedException {
+    public void addingNote() throws InterruptedException{
         // signup user then login
         initialize();
 
@@ -116,6 +120,11 @@ class CloudStorageApplicationTests {
         // Verify that note row is 1, because the addition
         assertEquals(1, driver.findElements(By.cssSelector(homePage.noteRowCssAddress)).size());
         Thread.sleep(500);
+    }
+
+    @Test
+    public void editingNote() throws InterruptedException{
+        addingNote();
 
         // Edit note
         homePage.editNote1("Jamal", "Udin");
@@ -128,6 +137,11 @@ class CloudStorageApplicationTests {
         // Verify that Edited note is correct
         assertEquals("Jamal", driver.findElement(By.xpath(homePage.noteTitle1XpathAddress)).getText());
         assertEquals("Udin", driver.findElement(By.xpath(homePage.noteDescription1XpathAddress)).getText());
+    }
+
+    @Test
+    public void deletingNote() throws InterruptedException{
+        addingNote();
 
         // Delete Note
         homePage.deleteNote1();
@@ -143,7 +157,7 @@ class CloudStorageApplicationTests {
     }
 
     @Test
-    public void CredentialsTest() throws InterruptedException {
+    public void addingCredential() throws InterruptedException{
         // signup user then login
         initialize();
 
@@ -164,6 +178,12 @@ class CloudStorageApplicationTests {
         assertEquals(1, driver.findElements(By.cssSelector(homePage.credentialRowCssAddress)).size());
         Thread.sleep(500);
         assertNotEquals(PASSWORD, driver.findElement(By.xpath(homePage.credentialPasswordXpathAddress)).getText());
+        Thread.sleep(500);
+    }
+
+    @Test
+    public void editingCredential() throws InterruptedException{
+        addingCredential();
 
         //Edit credential
         homePage.editCredential1Btn.click();
@@ -186,6 +206,11 @@ class CloudStorageApplicationTests {
         assertEquals("https://editedpage.coba", driver.findElement(By.xpath(homePage.credentialUrlXpathAddress)).getText());
         assertEquals("Udin", driver.findElement(By.xpath(homePage.credentialUsernameXpathAddress)).getText());
         assertNotEquals("123", driver.findElement(By.xpath(homePage.credentialPasswordXpathAddress)).getText());
+
+    }
+
+    public void deletingCredential() throws InterruptedException{
+        addingCredential();
 
         // Delete Credential
         homePage.deleteCredential1();

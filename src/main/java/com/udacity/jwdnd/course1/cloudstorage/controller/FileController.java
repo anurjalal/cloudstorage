@@ -30,6 +30,10 @@ public class FileController {
     @PostMapping("/add")
     public String createFile(@RequestParam("file") MultipartFile file, File fileUpload, Authentication authentication, Model model) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+            model.addAttribute("emptyFileError", true);
+            return "result";
+        }
         if (fileService.isFilenameAlreadyTaken(file.getOriginalFilename(), userId)) {
             model.addAttribute("filenameError", true);
             return "result";

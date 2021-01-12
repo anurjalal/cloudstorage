@@ -18,6 +18,7 @@
     <div th:unless="${success}" class="alert alert-danger fill-parent">
         <h1 class="display-5">Error</h1>
         <span th:if="${filenameError}">  Filename already exist, choose another filename</span>
+        <span th:if="${emptyFileError}">Please choose your file first ! </span>
         <span>Your changes were not saved. Click <a th:href="@{/home}">here</a> to continue.</span>
     </div>
 </div>
